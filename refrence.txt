@@ -1,0 +1,43 @@
+Online Parking Management System Problem: Parking inefficiency due to lack of real-time tracking. Objective: Design backend for parking management. Scope: * Track slots * Allocate parking * Calculate duration * Billing
+
+
+ParkingLot
+- id: Long
+- name: String
+- location: String
+- totalSlots: Integer
+- createdAt: LocalDateTime
+
+ParkingSlot
+- id: Long
+- slotNumber: String
+- type: SlotType (ENUM: BIKE, CAR, TRUCK)
+- status: SlotStatus (ENUM: AVAILABLE, OCCUPIED, RESERVED)
+- parkingLot: ParkingLot (ManyToOne)
+
+Vehicle
+- id: Long
+- vehicleNumber: String
+- type: VehicleType (ENUM: BIKE, CAR, TRUCK)
+- ownerName: String (optional)
+
+ParkingSession
+- id: Long
+- vehicle: Vehicle (ManyToOne)
+- slot: ParkingSlot (ManyToOne)
+- entryTime: LocalDateTime
+- exitTime: LocalDateTime
+- status: SessionStatus (ENUM: ACTIVE, COMPLETED)
+
+Bill
+- id: Long
+- session: ParkingSession (OneToOne)
+- amount: Double
+- durationInMinutes: Long
+- calculatedAt: LocalDateTime
+- paymentStatus: PaymentStatus (ENUM: PENDING, PAID)
+
+PricingPolicy
+- id: Long
+- vehicleType: VehicleType
+- pricePerHour: Double
