@@ -1,6 +1,15 @@
 Online Parking Management System Problem: Parking inefficiency due to lack of real-time tracking. Objective: Design backend for parking management. Scope: * Track slots * Allocate parking * Calculate duration * Billing
 
 
+AppUser
+- id: Long
+- fullName: String
+- username: String (unique)
+- password: String (hashed)
+- role: UserRole (ENUM: USER, ADMIN)
+- createdAt: LocalDateTime
+
+
 ParkingLot
 - id: Long
 - name: String
@@ -19,12 +28,13 @@ Vehicle
 - id: Long
 - vehicleNumber: String
 - type: VehicleType (ENUM: BIKE, CAR, TRUCK)
-- ownerName: String (optional)
+- owner: AppUser (ManyToOne)
 
 ParkingSession
 - id: Long
 - vehicle: Vehicle (ManyToOne)
 - slot: ParkingSlot (ManyToOne)
+- user: AppUser (ManyToOne)
 - entryTime: LocalDateTime
 - exitTime: LocalDateTime
 - status: SessionStatus (ENUM: ACTIVE, COMPLETED)
@@ -41,3 +51,31 @@ PricingPolicy
 - id: Long
 - vehicleType: VehicleType
 - pricePerHour: Double
+
+Auth Endpoints
+POST /api/auth/register/user
+POST /api/auth/register/admin
+POST /api/auth/login
+
+Swagger Documentation
+- Swagger UI: /swagger-ui.html
+- OpenAPI JSON: /v3/api-docs
+- Grouped categories:
+	- 01-auth (/api/auth/**)
+	- 02-parking (/api/parking/**)
+	- 03-slots (/api/slots/**)
+	- 04-sessions (/api/sessions/**)
+	- 05-bills (/api/bills/**)
+
+GET    /api/slots?status=AVAILABLE&type=CAR
+GET    /api/slots/{id}
+POST   /api/slots
+
+POST /api/parking/enter
+POST /api/parking/exit
+
+GET /api/bills/{sessionId}
+POST /api/bills/pay/{billId}
+
+GET /api/sessions/active
+GET /api/sessions/history
